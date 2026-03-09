@@ -1,0 +1,2260 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Sustainable Accounting | Module Template</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/serif.min.css" id="theme">
+
+    <!-- CSS for code syntax highlighting (light theme to match presentation) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-light.min.css">
+
+    
+    <style>
+        :root {
+            --color-primary: #005B41;
+            --color-secondary: #239D60;
+            --color-background: #F3EFEA;
+            --color-text: #333333;
+            --color-link: #007BFF;
+        }
+
+        .reveal {
+            font-family: 'Georgia', serif;
+            color: var(--color-text);
+        }
+
+        .reveal .slides {
+            background-color: var(--color-background);
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
+            color: var(--color-primary);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .reveal a {
+            color: var(--color-link);
+        }
+
+        /* --- UNIFIED STYLING FOR UI BUTTONS AND CONTAINERS --- */
+        .ui-container {
+            position: fixed;
+            top: 10px;
+            z-index: 1000;
+            padding: 10px; 
+        }
+
+        .ui-button {
+            display: block;
+            cursor: pointer;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            opacity: 0; /* Hidden by default */
+            pointer-events: none; /* Not clickable when hidden */
+            transition: opacity 0.4s ease-in-out;
+        }
+        
+        .ui-button.visible,
+        .ui-container:hover .ui-button
+        {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- Specific positioning for each container --- */
+        #menu-container {
+            left: 10px;
+        }
+        
+        #fullscreen-container {
+            right: 10px;
+        }
+
+        /* --- STYLING FOR THE LOGO ON THE TITLE SLIDE ONLY --- */
+        #title-logo {
+            max-width: 250px;
+            margin-top: 40px; 
+        }
+
+        /* --- STYLING FOR THE MENU OVERLAY --- */
+        #menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #menu-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #menu-content {
+            background-color: var(--color-background);
+            padding: 30px 40px;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        #menu-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-family: sans-serif;
+            color: #888;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+        #menu-close-btn:hover {
+            color: var(--color-text);
+        }
+
+        #menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        #menu-list li {
+            margin-bottom: 15px;
+        }
+
+        #menu-list a {
+            text-decoration: none;
+            font-size: 20px;
+            color: var(--color-text);
+            transition: color 0.2s;
+        }
+
+        #menu-list a:hover {
+            color: var(--color-primary);
+        }
+
+        /* --- STYLES FOR ANIMATION FEATURES --- */
+
+        /* Container for text on top of video/parallax backgrounds. Uses theme colors. */
+        .r-slide-container {
+            background-color: rgba(243, 239, 234, 0.85); /* var(--color-background) with opacity */
+            padding: 20px;
+            border-radius: 15px;
+            color: var(--color-text);
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Styling for the blue highlight fragment, using the theme's link color */
+        .reveal .slides section .fragment.highlight-blue.visible {
+            color: var(--color-link);
+        }
+
+        /* Custom styles for the Auto-Animate demo boxes, using theme colors */
+        .diagram-box {
+            border: 2px solid var(--color-secondary);
+            background-color: rgba(35, 157, 96, 0.1); /* var(--color-secondary) with opacity */
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem auto;
+            transition: all 1s ease-in-out; /* Smooth morphing */
+        }
+        /* ===== CLEAN VIDEO TITLE SLIDE ===== */
+        section:first-of-type .r-slide-container {
+            background-color: transparent; /* remove the grey box */
+            box-shadow: none;
+        }
+
+        /* ===== FIX: REMOVE WHITE SLIDE BACKGROUND FOR VIDEO SLIDE ===== */
+        section:first-of-type {
+            background: transparent !important;
+        }
+
+        /* Also ensure Reveal doesn't paint behind it */
+        .reveal .slides {
+            background: transparent !important;
+        }
+
+        /* Remove card look */
+        section:first-of-type .r-slide-container {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        /* White text on video */
+        section:first-of-type h1,
+        section:first-of-type h2,
+        section:first-of-type h3 {
+            color: #ffffff;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+
+        section:first-of-type p {
+            color: rgba(255,255,255,0.9);
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        section:first-of-type em {
+            color: #9AF2C6;
+        }
+
+        /* White logo */
+        section:first-of-type #title-logo {
+            filter: brightness(0) invert(1);
+        }
+
+
+
+
+<!-- #############################################################divider###################################################################### -->
+
+        /* ===== ATTENDANCE CODE SLIDE (SCOPED) ===== */
+        #attendance-code-slide{
+        height: 100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        }
+
+        #attendance-code-slide .att-card{
+        width: 100%;
+        max-width: 1180px;
+        background: rgba(255,255,255,0.74);
+        border: 1px solid rgba(0,0,0,0.10);
+        border-radius: 22px;
+        padding: 26px 28px;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.10);
+        }
+
+        #attendance-code-slide .att-head h2{
+        margin: 0;
+        color: var(--color-primary);
+        }
+
+        #attendance-code-slide .att-sub{
+        margin-top: 8px;
+        color: rgba(51,51,51,0.82);
+        font-size: 0.98em;
+        }
+
+        #attendance-code-slide .att-grid{
+        margin-top: 18px;
+        display:grid;
+        grid-template-columns: 1.25fr 0.9fr;
+        gap: 14px;
+        align-items: stretch;
+        }
+
+        #attendance-code-slide .att-code-wrap,
+        #attendance-code-slide .att-steps{
+        background: rgba(243,239,234,0.85);
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 16px;
+        padding: 16px;
+        }
+
+        #attendance-code-slide .att-label{
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        font-size: 0.72em;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: rgba(51,51,51,0.65);
+        margin-bottom: 10px;
+        }
+
+        #attendance-code-slide .att-code{
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        font-weight: 900;
+        font-size: 3.2em;
+        line-height: 1.05;
+        text-align: center;
+        color: var(--color-primary);
+
+        background: rgba(255,255,255,0.90);
+        border: 2px dashed rgba(0,91,65,0.35);
+        border-radius: 18px;
+        padding: 18px 16px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+
+        outline: none;
+        user-select: text;
+        cursor: text;
+        }
+
+        #attendance-code-slide .att-code:focus{
+        border-style: solid;
+        border-color: rgba(0,91,65,0.55);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.14);
+        }
+
+        #attendance-code-slide .att-hint{
+        margin-top: 10px;
+        font-size: 0.82em;
+        color: rgba(51,51,51,0.70);
+        line-height: 1.35;
+        }
+
+        #attendance-code-slide .att-steps-title{
+        font-weight: 850;
+        color: rgba(0,91,65,0.95);
+        margin-bottom: 8px;
+        }
+
+        #attendance-code-slide .att-steps ol{
+        margin: 0;
+        padding-left: 1.1em;
+        color: rgba(51,51,51,0.86);
+        line-height: 1.45;
+        font-size: 0.95em;
+        }
+
+        #attendance-code-slide .att-url{
+        margin-top: 12px;
+        font-size: 0.86em;
+        color: rgba(51,51,51,0.78);
+        }
+
+        #attendance-code-slide .att-url span{
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        background: rgba(255,255,255,0.75);
+        border: 1px solid rgba(0,0,0,0.10);
+        padding: 4px 8px;
+        border-radius: 10px;
+        }
+
+        #attendance-code-slide .att-foot{
+        margin-top: 12px;
+        font-size: 0.72em;
+        color: rgba(51,51,51,0.62);
+        }
+
+        /* Responsive */
+        @media (max-width: 950px){
+        #attendance-code-slide .att-grid{ grid-template-columns: 1fr; }
+        #attendance-code-slide .att-code{ font-size: 2.6em; }
+        }
+
+
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+        #topic-title-only{
+        position: relative;
+        isolation: isolate;
+        }
+
+        #topic-title-only .topic-slide{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        padding: 40px 60px;
+        box-sizing: border-box;
+
+        background: var(--color-background);
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,0.08);
+        box-shadow: 0 18px 45px rgba(0,0,0,0.10);
+        }
+
+        #topic-title-only .topic-title{
+        margin: 0;
+        line-height: 1.06;
+        font-weight: 900;
+        color: var(--color-primary);
+        letter-spacing: -0.02em;
+        font-size: 58px;
+        }
+
+        #topic-title-only .topic-main{
+        display: inline-block;
+        margin-top: 10px;
+        background: linear-gradient(
+            90deg,
+            var(--color-primary),
+            var(--color-secondary)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        }
+
+        @media (max-width: 900px){
+        #topic-title-only .topic-title{
+            font-size: 42px;
+        }
+        }
+
+<!-- #############################################################divider###################################################################### -->
+ 
+        /* SLIDE 1 — The Three Structural Tensions */
+        #sr-tensions-3{
+        position: relative;
+        isolation: isolate;
+        }
+
+        /* layout wrapper */
+        #sr-tensions-3 .wrap{
+        height: 100%;
+        padding: 26px 34px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 14px;
+        }
+
+        /* title + subtitle */
+        #sr-tensions-3 h3{
+        margin: 0;
+        font-size: 36px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-tensions-3 .sub{
+        margin-top: 6px;
+        font-size: 18px;
+        opacity: .9;
+        max-width: 1050px;
+        }
+
+        /* 3-column grid */
+        #sr-tensions-3 .grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+        align-items: stretch;
+        min-height: 0;
+        }
+
+        /* card container */
+        #sr-tensions-3 .card{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+
+        /* slightly tighter than before to help fitting */
+        padding: 12px 14px;
+
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        min-height: 0;
+        }
+
+        /* top line in each column: "1) Standardisation vs ..." */
+        #sr-tensions-3 .k{
+        font-weight: 800;
+        font-size: 15px;          /* ↓ slightly smaller */
+        letter-spacing: -.2px;
+        margin-bottom: 8px;
+        }
+
+        /* stack of pairs */
+        #sr-tensions-3 .pairs{
+        display: grid;
+        gap: 8px;                 /* ↓ slightly tighter */
+        align-content: start;
+        }
+
+        /* each pair block */
+        #sr-tensions-3 .pair{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(0,0,0,.02);
+
+        /* ↓ slightly tighter */
+        padding: 8px 10px;
+        }
+
+        /* BIG label words: "Standardisation", "Discretion", etc. */
+        #sr-tensions-3 .pair .a{
+        font-weight: 800;
+        margin-bottom: 4px;
+
+        /* ↓ key fix: explicitly control size */
+        font-size: clamp(16px, 1.7vw, 20px);
+        line-height: 1.05;
+        }
+
+        /* description text under the big words */
+        #sr-tensions-3 .pair .b{
+        font-size: 14px;          /* ↓ tiny reduction */
+        line-height: 1.28;
+        opacity: .92;
+        }
+
+        /* failure mode box */
+        #sr-tensions-3 .risk{
+        margin-top: 10px;
+        border-radius: 18px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 10px 12px;
+        font-size: 13.4px;        /* ↓ tiny reduction */
+        line-height: 1.25;
+        opacity: .92;
+        }
+
+        /* footer strip */
+        #sr-tensions-3 .foot{
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        align-items: baseline;
+        font-size: 13px;
+        opacity: .78;
+        }
+        #sr-tensions-3 .pill{
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 999px;
+        padding: 5px 10px;
+        background: rgba(0,0,0,.03);
+        font-size: 12px;
+        white-space: nowrap;
+        }
+
+        /* responsive */
+        @media (max-width: 1100px){
+        #sr-tensions-3 .grid{
+            grid-template-columns: 1fr;
+        }
+        }
+
+
+<!-- #############################################################divider###################################################################### -->
+
+        /* SLIDE 2 — Why These Tensions Are Structural */
+        #sr-structural-theory{
+        position: relative;
+        isolation: isolate;
+        }
+
+        #sr-structural-theory .wrap{
+        height: 100%;
+        padding: 28px 36px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 18px;
+        }
+
+        /* Title */
+        #sr-structural-theory h3{
+        margin: 0;
+        font-size: 36px;
+        letter-spacing: -0.5px;
+        line-height: 1.05;
+        }
+
+        /* Subtitle */
+        #sr-structural-theory .sub{
+        margin-top: 6px;
+        font-size: 17px;
+        opacity: .85;
+        max-width: 1000px;
+        }
+
+        /* Grid layout */
+        #sr-structural-theory .grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        align-items: start;
+        }
+
+        /* Each theory block */
+        #sr-structural-theory .block{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 20px;
+        padding: 14px 16px;
+        }
+
+        #sr-structural-theory .block h4{
+        margin: 0 0 8px 0;
+        font-size: 17px;
+        font-weight: 800;
+        }
+
+        #sr-structural-theory .block p{
+        margin: 0;
+        font-size: 14.5px;
+        line-height: 1.32;
+        opacity: .92;
+        }
+
+        /* Footer references */
+        #sr-structural-theory .refs{
+        margin-top: 6px;
+        font-size: 12.5px;
+        opacity: .65;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        }
+            
+<!-- #############################################################divider###################################################################### -->
+
+        /* SLIDE 2 — Hybrid Document */
+        #sr-hybrid-zones{
+        position: relative; isolation: isolate;
+        }
+        #sr-hybrid-zones .wrap{
+        height: 100%;
+        padding: 26px 34px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 14px;
+        }
+        #sr-hybrid-zones h2{
+        margin: 0;
+        font-size: 46px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-hybrid-zones .sub{
+        margin-top: 6px;
+        font-size: 18px;
+        opacity: .9;
+        max-width: 1100px;
+        }
+        #sr-hybrid-zones .panel{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+        padding: 14px 16px;
+        min-height: 0;
+        }
+        #sr-hybrid-zones .table{
+        display: grid;
+        grid-template-columns: 1.05fr 1.1fr 1.2fr;
+        gap: 10px;
+        align-items: start;
+        }
+        #sr-hybrid-zones .th{
+        font-weight: 900;
+        padding: 8px 10px;
+        border-radius: 14px;
+        background: rgba(0,0,0,.04);
+        border: 1px solid rgba(0,0,0,.10);
+        }
+        #sr-hybrid-zones .row{
+        display: contents;
+        }
+        #sr-hybrid-zones .cell{
+        padding: 10px 10px;
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.58);
+        font-size: 15px;
+        line-height: 1.25;
+        }
+        #sr-hybrid-zones .zone{
+        font-weight: 900;
+        }
+        #sr-hybrid-zones .risk{
+        border-style: dashed;
+        background: rgba(0,0,0,.02);
+        }
+        #sr-hybrid-zones .footer{
+        display:grid;
+        grid-template-columns: 1.1fr .9fr;
+        gap: 14px;
+        }
+        #sr-hybrid-zones .box{
+        border-radius: 20px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 12px 14px;
+        font-size: 14px;
+        line-height: 1.25;
+        opacity: .92;
+        }
+        #sr-hybrid-zones .q{
+        font-weight: 900;
+        margin-bottom: 6px;
+        }
+        @media (max-width: 1000px){
+        #sr-hybrid-zones .table{ grid-template-columns: 1fr; }
+        #sr-hybrid-zones .footer{ grid-template-columns: 1fr; }
+        }
+      
+
+<!-- #############################################################divider###################################################################### -->
+
+
+        /* SLIDE 3 — Measurement Problem */
+        #sr-measurement-problem{
+        position: relative; isolation: isolate;
+        }
+        #sr-measurement-problem .wrap{
+        height: 100%;
+        padding: 26px 34px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 14px;
+        }
+        #sr-measurement-problem h2{
+        margin: 0;
+        font-size: 46px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-measurement-problem .sub{
+        margin-top: 6px;
+        font-size: 18px;
+        opacity: .9;
+        max-width: 1100px;
+        }
+        #sr-measurement-problem .grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        min-height: 0;
+        }
+        #sr-measurement-problem .card{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+        padding: 14px 16px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        min-height: 0;
+        }
+        #sr-measurement-problem .k{
+        font-weight: 900;
+        font-size: 18px;
+        margin-bottom: 10px;
+        }
+        #sr-measurement-problem ul{
+        margin: 0;
+        padding-left: 18px;
+        font-size: 15px;
+        line-height: 1.28;
+        opacity: .94;
+        }
+        #sr-measurement-problem li{ margin-bottom: 8px; }
+        #sr-measurement-problem .ladder{
+        margin-top: 10px;
+        border-radius: 18px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 12px 14px;
+        }
+        #sr-measurement-problem .step{
+        display:flex; justify-content: space-between; gap: 12px;
+        padding: 8px 10px;
+        border-radius: 14px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.55);
+        margin-bottom: 8px;
+        font-size: 14.5px;
+        }
+        #sr-measurement-problem .step:last-child{ margin-bottom: 0; }
+        #sr-measurement-problem .lbl{ font-weight: 900; }
+        #sr-measurement-problem .weak{ opacity: .78; font-weight: 800; }
+        #sr-measurement-problem .footer{
+        display:flex; justify-content: space-between; gap: 14px; align-items: baseline;
+        font-size: 13px; opacity: .78;
+        }
+        #sr-measurement-problem .pill{
+        display:inline-block;
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 999px;
+        padding: 5px 10px;
+        background: rgba(0,0,0,.03);
+        font-size: 12px;
+        white-space: nowrap;
+        }
+        @media (max-width: 1050px){
+        #sr-measurement-problem .grid{ grid-template-columns: 1fr; }
+        }
+            
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+        /* SLIDE 4 — Horizon Problem */
+        #sr-horizon-problem{
+        position: relative; isolation: isolate;
+        }
+        #sr-horizon-problem .wrap{
+        height: 100%;
+        padding: 26px 34px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 14px;
+        }
+        #sr-horizon-problem h2{
+        margin: 0;
+        font-size: 46px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-horizon-problem .sub{
+        margin-top: 6px;
+        font-size: 18px;
+        opacity: .9;
+        max-width: 1100px;
+        }
+        #sr-horizon-problem .panel{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+        padding: 14px 16px;
+        display: grid;
+        grid-template-columns: 1.1fr .9fr;
+        gap: 14px;
+        min-height: 0;
+        }
+        #sr-horizon-problem .left{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.56);
+        padding: 12px 14px;
+        }
+        #sr-horizon-problem .claim{
+        font-size: 20px;
+        line-height: 1.2;
+        font-weight: 900;
+        margin-bottom: 10px;
+        }
+        #sr-horizon-problem .qbox{
+        border-radius: 18px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 12px 14px;
+        }
+        #sr-horizon-problem .q{
+        font-weight: 900;
+        margin-bottom: 8px;
+        }
+        #sr-horizon-problem ul{
+        margin: 0;
+        padding-left: 18px;
+        font-size: 15px;
+        line-height: 1.28;
+        opacity: .94;
+        }
+        #sr-horizon-problem li{ margin-bottom: 8px; }
+        #sr-horizon-problem .right{
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 10px;
+        }
+        #sr-horizon-problem .map{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(0,0,0,.02);
+        padding: 12px 14px;
+        font-size: 14.5px;
+        line-height: 1.28;
+        }
+        #sr-horizon-problem .map .t{
+        font-weight: 900;
+        margin-bottom: 6px;
+        }
+        #sr-horizon-problem .ladder{
+        display: grid;
+        gap: 10px;
+        }
+        #sr-horizon-problem .step{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.56);
+        padding: 10px 12px;
+        font-size: 14.5px;
+        line-height: 1.25;
+        }
+        #sr-horizon-problem .step b{ font-weight: 900; }
+        #sr-horizon-problem .footer{
+        display:flex; justify-content: space-between; gap: 14px; align-items: baseline;
+        font-size: 13px; opacity: .78;
+        }
+        #sr-horizon-problem .pill{
+        display:inline-block;
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 999px;
+        padding: 5px 10px;
+        background: rgba(0,0,0,.03);
+        font-size: 12px;
+        white-space: nowrap;
+        }
+        @media (max-width: 1100px){
+        #sr-horizon-problem .panel{ grid-template-columns: 1fr; }
+        }
+            
+<!-- #############################################################divider###################################################################### -->
+
+      
+        /* SLIDE 5 — Connectivity Chain */
+        #sr-connectivity-chain{
+        position: relative; isolation: isolate;
+        }
+        #sr-connectivity-chain .wrap{
+        height: 100%;
+        padding: 26px 34px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 14px;
+        }
+        #sr-connectivity-chain h2{
+        margin: 0;
+        font-size: 46px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-connectivity-chain .sub{
+        margin-top: 6px;
+        font-size: 18px;
+        opacity: .9;
+        max-width: 1100px;
+        }
+        #sr-connectivity-chain .panel{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+        padding: 14px 16px;
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        min-height: 0;
+        }
+        #sr-connectivity-chain .chain{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.56);
+        padding: 12px 14px;
+        min-height: 0;
+        }
+        #sr-connectivity-chain .node{
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(0,0,0,.02);
+        padding: 10px 12px;
+        font-size: 15px;
+        line-height: 1.18;
+        display:flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+        }
+        #sr-connectivity-chain .node:last-child{ margin-bottom: 0; }
+        #sr-connectivity-chain .node b{ font-weight: 900; }
+        #sr-connectivity-chain .node .hint{
+        font-size: 12.5px;
+        opacity: .78;
+        font-weight: 800;
+        white-space: nowrap;
+        }
+        #sr-connectivity-chain .breaks{
+        border-radius: 18px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 12px 14px;
+        min-height: 0;
+        }
+        #sr-connectivity-chain .breaks .t{
+        font-weight: 900;
+        margin-bottom: 8px;
+        }
+        #sr-connectivity-chain .break{
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.55);
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        font-size: 14.5px;
+        line-height: 1.25;
+        }
+        #sr-connectivity-chain .break:last-child{ margin-bottom: 0; }
+        #sr-connectivity-chain .footer{
+        display:flex; justify-content: space-between; gap: 14px; align-items: baseline;
+        font-size: 13px; opacity: .78;
+        }
+        #sr-connectivity-chain .pill{
+        display:inline-block;
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 999px;
+        padding: 5px 10px;
+        background: rgba(0,0,0,.03);
+        font-size: 12px;
+        white-space: nowrap;
+        }
+        @media (max-width: 1050px){
+        #sr-connectivity-chain .panel{ grid-template-columns: 1fr; }
+        }
+
+
+
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+        /* SLIDE 6 (v2) — Sage: Architecture in Four Receipts */
+        #sr-sage-architecture-v2{ position: relative; isolation: isolate; }
+        #sr-sage-architecture-v2 .wrap{
+        height: 100%;
+        padding: 22px 32px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 10px;
+        }
+        #sr-sage-architecture-v2 h2{
+        margin: 0;
+        font-size: 40px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-sage-architecture-v2 .sub{
+        margin-top: 4px;
+        font-size: 16px;
+        opacity: .9;
+        max-width: 1120px;
+        }
+
+        /* Main panel */
+        #sr-sage-architecture-v2 .panel{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+        padding: 12px 14px;
+        display: grid;
+        grid-template-columns: 1.05fr .95fr;
+        gap: 12px;
+        min-height: 0;
+        }
+        #sr-sage-architecture-v2 .left,
+        #sr-sage-architecture-v2 .right{
+        min-height: 0;
+        display: grid;
+        gap: 8px;
+        align-content: start;
+        }
+
+        /* Boxes */
+        #sr-sage-architecture-v2 .box{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.56);
+        padding: 10px 12px;
+        }
+        #sr-sage-architecture-v2 .t{
+        font-weight: 900;
+        margin-bottom: 6px;
+        font-size: 18px;
+        line-height: 1.05;
+        letter-spacing: -0.2px;
+        }
+
+        /* Disclosure clip */
+        #sr-sage-architecture-v2 .clip{
+        border-radius: 16px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 10px 12px;
+        opacity: .94;
+        }
+        #sr-sage-architecture-v2 .clip .q{
+        font-size: 13.4px;
+        line-height: 1.25;
+        }
+        #sr-sage-architecture-v2 .clip .src{
+        margin-top: 6px;
+        font-size: 12px;
+        opacity: .72;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: baseline;
+        }
+        #sr-sage-architecture-v2 .clip .src a{
+        text-decoration: underline;
+        }
+        #sr-sage-architecture-v2 .hint{
+        margin-top: 7px;
+        font-size: 12.8px;
+        opacity: .86;
+        line-height: 1.22;
+        }
+
+        /* Interpretation map */
+        #sr-sage-architecture-v2 .map{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(0,0,0,.02);
+        padding: 10px 12px;
+        }
+        #sr-sage-architecture-v2 .line{
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.56);
+        margin-bottom: 8px;
+        font-size: 13.4px;
+        line-height: 1.22;
+        }
+        #sr-sage-architecture-v2 .tag{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        border: 1px solid rgba(0,0,0,.12);
+        background: rgba(0,0,0,.03);
+        font-weight: 900;
+        font-size: 12px;
+        height: 28px;
+        }
+        #sr-sage-architecture-v2 .mini{
+        margin-top: 4px;
+        font-size: 12.6px;
+        opacity: .82;
+        }
+
+        #sr-sage-architecture-v2 .qbox{
+        margin-top: 2px;
+        border-radius: 16px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 10px 12px;
+        font-size: 13.1px;
+        line-height: 1.22;
+        opacity: .92;
+        }
+
+        /* Footer */
+        #sr-sage-architecture-v2 .footer{
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        align-items: baseline;
+        font-size: 12.5px;
+        opacity: .78;
+        }
+        #sr-sage-architecture-v2 .pill{
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 999px;
+        padding: 5px 10px;
+        background: rgba(0,0,0,.03);
+        font-size: 11.5px;
+        white-space: nowrap;
+        }
+
+        @media (max-width: 1100px){
+        #sr-sage-architecture-v2 .panel{ grid-template-columns: 1fr; }
+        }
+       
+<!-- #############################################################divider###################################################################### -->
+
+        /* SLIDE 7 — Sage Critical Observations */
+        #sr-sage-critical{
+        position: relative; isolation: isolate;
+        }
+        #sr-sage-critical .wrap{
+        height: 100%;
+        padding: 26px 34px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 14px;
+        }
+        #sr-sage-critical h2{
+        margin: 0;
+        font-size: 46px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-sage-critical .sub{
+        margin-top: 6px;
+        font-size: 18px;
+        opacity: .9;
+        max-width: 1100px;
+        }
+        #sr-sage-critical .panel{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+        padding: 14px 16px;
+        display:grid;
+        grid-template-columns: 1.05fr .95fr;
+        gap: 14px;
+        min-height: 0;
+        }
+        #sr-sage-critical .left, #sr-sage-critical .right{
+        min-height: 0;
+        display:grid;
+        gap: 10px;
+        align-content: start;
+        }
+        #sr-sage-critical .box{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.56);
+        padding: 12px 14px;
+        }
+        #sr-sage-critical .t{
+        font-weight: 900;
+        margin-bottom: 8px;
+        }
+        #sr-sage-critical .quote{
+        border-radius: 16px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.015);
+        padding: 10px 12px;
+        font-size: 14px;
+        line-height: 1.25;
+        opacity: .92;
+        }
+        #sr-sage-critical .list{
+        margin: 0;
+        padding-left: 18px;
+        font-size: 14.8px;
+        line-height: 1.28;
+        opacity: .94;
+        }
+        #sr-sage-critical .list li{ margin-bottom: 8px; }
+        #sr-sage-critical .qbox{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(0,0,0,.02);
+        padding: 12px 14px;
+        }
+        #sr-sage-critical .q{
+        font-weight: 900;
+        margin-bottom: 8px;
+        }
+        #sr-sage-critical .footer{
+        display:flex; justify-content: space-between; gap: 14px; align-items: baseline;
+        font-size: 13px; opacity: .78;
+        }
+        #sr-sage-critical .pill{
+        display:inline-block;
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 999px;
+        padding: 5px 10px;
+        background: rgba(0,0,0,.03);
+        font-size: 12px;
+        white-space: nowrap;
+        }
+        @media (max-width: 1100px){
+        #sr-sage-critical .panel{ grid-template-columns: 1fr; }
+        }
+
+
+<!-- #############################################################divider###################################################################### -->
+
+        /* SLIDE 8 — Critical Tensions (v3) */
+        #sr-sage-critical-v3{ position: relative; isolation: isolate; }
+        #sr-sage-critical-v3 .wrap{
+        height: 100%;
+        padding: 22px 32px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 10px;
+        }
+        #sr-sage-critical-v3 h2{
+        margin: 0;
+        font-size: 40px;
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        }
+        #sr-sage-critical-v3 .sub{
+        margin-top: 4px;
+        font-size: 16px;
+        opacity: .9;
+        max-width: 1100px;
+        }
+
+        #sr-sage-critical-v3 .panel{
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 22px;
+        padding: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        min-height: 0;
+        }
+
+        #sr-sage-critical-v3 .left,
+        #sr-sage-critical-v3 .right{
+        display: grid;
+        gap: 10px;
+        align-content: start;
+        }
+
+        #sr-sage-critical-v3 .box{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.55);
+        padding: 10px 12px;
+        }
+
+        #sr-sage-critical-v3 .t{
+        font-weight: 900;
+        margin-bottom: 6px;
+        font-size: 18px;
+        }
+
+        #sr-sage-critical-v3 .clip{
+        border-radius: 14px;
+        border: 1px dashed rgba(0,0,0,.22);
+        background: rgba(0,0,0,.02);
+        padding: 8px 10px;
+        font-size: 13.4px;
+        line-height: 1.22;
+        }
+
+        #sr-sage-critical-v3 .insight{
+        margin-top: 6px;
+        font-size: 12.8px;
+        opacity: .85;
+        }
+
+        #sr-sage-critical-v3 .analysis{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(0,0,0,.02);
+        padding: 10px 12px;
+        }
+
+        #sr-sage-critical-v3 .at{
+        font-weight: 900;
+        margin-bottom: 8px;
+        }
+
+        #sr-sage-critical-v3 .aline{
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
+        padding: 8px;
+        border-radius: 14px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.55);
+        margin-bottom: 8px;
+        font-size: 13.4px;
+        line-height: 1.22;
+        }
+
+        #sr-sage-critical-v3 .tag{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        border: 1px solid rgba(0,0,0,.15);
+        background: rgba(0,0,0,.04);
+        font-weight: 900;
+        font-size: 12px;
+        }
+
+        #sr-sage-critical-v3 .exercise{
+        border-radius: 18px;
+        border: 1px solid rgba(0,0,0,.10);
+        background: rgba(255,255,255,.55);
+        padding: 10px 12px;
+        }
+
+        #sr-sage-critical-v3 .et{
+        font-weight: 900;
+        margin-bottom: 6px;
+        }
+
+        #sr-sage-critical-v3 .ep{
+        font-size: 13.4px;
+        line-height: 1.24;
+        }
+
+        #sr-sage-critical-v3 .ep ul{
+        margin-top: 6px;
+        padding-left: 18px;
+        }
+
+        #sr-sage-critical-v3 .footer{
+        display: flex;
+        justify-content: space-between;
+        font-size: 12.5px;
+        opacity: .78;
+        }
+
+        #sr-sage-critical-v3 .pill{
+        border: 1px solid rgba(0,0,0,.12);
+        border-radius: 999px;
+        padding: 5px 10px;
+        background: rgba(0,0,0,.03);
+        font-size: 11.5px;
+        }
+
+<!-- #############################################################divider###################################################################### -->
+
+
+    </style>
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<body>
+    <div id="menu-container" class="ui-container">
+        <button id="menu-btn" class="ui-button" title="Open Slide Menu">Menu</button>
+    </div>
+
+    <div id="menu-overlay">
+        <div id="menu-content">
+            <button id="menu-close-btn" title="Close Menu">&times;</button>
+            <h2>Table of Contents</h2>
+            <hr>
+            <ul id="menu-list"></ul>
+        </div>
+    </div>
+
+    <div id="fullscreen-container" class="ui-container">
+        <button id="fullscreen-btn" class="ui-button" title="Toggle Fullscreen">Fullscreen</button>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: Title Slide with Video Background -->
+            <section 
+                data-background-video="../resource/wind-turbine-edits.mp4" 
+                data-background-video-loop 
+                data-background-video-muted>
+                <div class="r-slide-container">
+                    <!-- The original image tag has been restored as requested -->
+                    <img 
+                        src="../UoL-logo-2022/Black/UoL - Logo - black.png" 
+                        id="title-logo" 
+                        alt="University of Liverpool Logo"
+                    >
+                    
+                    <h2>Measuring and Disclosing Sustainability</h2>
+                    <p>ULMS625/ACFI625</p>
+                    <br>
+                    <p style="color: var(--color-secondary);"><em>Dr. Rui Shi</em></p>
+                </div>
+            </section>
+
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="attendance-code-slide">
+            <div class="att-card">
+                <div class="att-head">
+                <h3>Attendance check-in</h3>
+                <div class="att-sub">On your phone, open the Timetables and enter the code below.</div>
+                </div>
+
+                <div class="att-grid">
+                <!-- Left: big code -->
+                <div class="att-code-wrap">
+                    <div class="att-label">Attendance code</div>
+
+                    <!-- Click to type; supports live editing -->
+                    <div
+                    id="att-code"
+                    class="att-code"
+                    contenteditable="true"
+                    spellcheck="false"
+                    aria-label="Attendance code (click to type)"
+                    >TYPECODE</div>
+
+                    <div class="att-hint">
+                    Tip: click the box and type (e.g., <strong>ULMS625-17JAN</strong>). Press <strong>Esc</strong> to stop editing.
+                    </div>
+                </div>
+
+                <!-- Right: optional instructions -->
+                <div class="att-steps">
+                    <div class="att-steps-title">Students</div>
+                    <ol>
+                    <li>Open the attendance page on your phone</li>
+                    <li>Enter the code shown</li>
+                    <li>Submit</li>
+                    </ol>
+
+                    <!-- OPTIONAL: put your URL or QR here (uncomment if you want) -->
+                    <!--
+                    <div class="att-url">
+                    Link: <span>YOUR-URL-HERE</span>
+                    </div>
+                    -->
+                </div>
+                </div>
+
+            </div>
+            </section>
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="topic-title-only">
+            <div class="topic-slide">
+                <h1 class="topic-title">
+                Topic 4<br>
+                <span class="topic-main"> Structure and content of sustainability reports</span>
+                </h1>
+            </div>
+            </section>
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="sr-tensions-3">
+            <div class="wrap">
+                <header>
+                <h3>The Three Structural Tensions of Sustainability Reporting</h3>
+                <div class="sub">
+                    The report is not “one thing”. It is an uneasy settlement between <b>rules</b>, <b>judgement</b>, and <b>persuasion</b>.
+                </div>
+                </header>
+
+                <div class="grid">
+                <div class="card">
+                    <div class="k">1) Standardisation vs Managerial Discretion</div>
+                    <div class="pairs">
+                    <div class="pair">
+                        <div class="a">Standardization</div>
+                        <div class="b">GRI / ESRS / SASB → comparability, minimum disclosure architecture, auditability.</div>
+                    </div>
+                    <div class="pair">
+                        <div class="a">Discretion</div>
+                        <div class="b">Materiality thresholds, boundary choices, estimation methods, narrative framing.</div>
+                    </div>
+                    </div>
+                    <div class="risk"><b>Failure mode:</b> “Compliance theatre” — high format compliance, low decision-useful content.</div>
+                </div>
+
+                <div class="card">
+                    <div class="k">2) Backward Measurement vs Forward Uncertainty</div>
+                    <div class="pairs">
+                    <div class="pair">
+                        <div class="a">Metrics are historical</div>
+                        <div class="b">Emissions, injuries, training hours: measurable only after the fact.</div>
+                    </div>
+                    <div class="pair">
+                        <div class="a">Strategy is forward-looking</div>
+                        <div class="b">Targets, transition plans, resilience: scenario-based, model-dependent, uncertain.</div>
+                    </div>
+                    </div>
+                    <div class="risk"><b>Failure mode:</b> “Precision bias” — reliable numbers dominate attention; uncertain risks get rhetorical treatment.</div>
+                </div>
+
+                <div class="card">
+                    <div class="k">3) Accountability vs Legitimacy Signalling</div>
+                    <div class="pairs">
+                    <div class="pair">
+                        <div class="a">Accountability</div>
+                        <div class="b">Auditable, verifiable, governed; ideally linked to incentives and controls.</div>
+                    </div>
+                    <div class="pair">
+                        <div class="a">Legitimacy signalling</div>
+                        <div class="b">A report also “markets” seriousness to regulators, investors, employees, civil society.</div>
+                    </div>
+                    </div>
+                    <div class="risk"><b>Failure mode:</b> “Selective assurance” — credibility is borrowed from assured fragments.</div>
+                </div>
+                </div>
+
+                <div class="foot">
+                <span class="pill">Provocation: “Most sustainability reports are compliance-driven architectures constrained by uncertainty.”</span>
+                <span>These tensions are not accidental — they arise from economic and institutional constraints.</span>
+                </div>
+            </div>
+            </section>
+
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+            <section id="sr-structural-theory">
+            <div class="wrap">
+
+                <header>
+                <h3>Why These Tensions Are Structural</h3>
+                <div class="sub">
+                    These tensions arise from economic limits of disclosure, deep uncertainty, and institutional pressures — not from poor report design.
+                </div>
+                </header>
+
+                <div class="grid">
+
+                <div class="block">
+                    <h4>Incomplete Verifiability (Information Economics)</h4>
+                    <p>
+                    Milgrom (1981): full disclosure requires credible verification.
+                    Sustainability disclosures are only partially verifiable —
+                    materiality thresholds, boundaries, and estimates remain discretionary.
+                    Standards force partial unravelling, but discretion survives.
+                    </p>
+                </div>
+
+                <div class="block">
+                    <h4>Knightian Uncertainty (Risk Theory)</h4>
+                    <p>
+                    Knight (1921): risk is measurable; uncertainty is not.
+                    Climate transition risk is largely non-probabilistic.
+                    Accounting systems privilege observable, historical numbers,
+                    structurally disadvantaging forward uncertainty.
+                    </p>
+                </div>
+
+                <div class="block">
+                    <h4>Performativity of Quantification</h4>
+                    <p>
+                    Porter (1995); Espeland & Stevens (1998):
+                    numbers do not merely describe reality — they construct it.
+                    What is measurable becomes governable.
+                    Reliable historical metrics dominate attention over uncertain strategic risks.
+                    </p>
+                </div>
+
+                <div class="block">
+                    <h4>Institutional Legitimacy Pressures</h4>
+                    <p>
+                    Meyer & Rowan (1977); Suchman (1995):
+                    organizations adopt formal structures to secure legitimacy.
+                    Sustainability reporting may exhibit decoupling —
+                    compliance architecture without full operational transformation.
+                    </p>
+                </div>
+
+                </div>
+
+                <div class="refs">
+                Milgrom (1981) · Knight (1921) · Porter (1995) · Espeland & Stevens (1998) · Meyer & Rowan (1977) · Suchman (1995)
+                </div>
+
+            </div>
+
+            <aside class="notes">
+                Emphasise: These tensions are structural constraints, not managerial incompetence.
+                Move from structure → theory → then Sage case illustration.
+            </aside>
+            </section>
+  
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="sr-hybrid-zones">
+            <div class="wrap">
+                <header>
+                <h2>Sustainability Report as a Hybrid Document</h2>
+                <div class="sub">
+                    Treat the report as four “zones”. Each zone solves a different problem — and creates a different risk.
+                </div>
+                </header>
+
+                <div class="panel">
+                <div class="table">
+                    <div class="th">Zone</div>
+                    <div class="th">Function</div>
+                    <div class="th">Risk</div>
+
+                    <div class="row">
+                    <div class="cell zone">Governance</div>
+                    <div class="cell">Legitimacy & accountability: who decides, who monitors, who signs off.</div>
+                    <div class="cell risk"><b>Box-ticking</b>: committees exist, but decision rights and escalation are vague.</div>
+                    </div>
+
+                    <div class="row">
+                    <div class="cell zone">Metrics</div>
+                    <div class="cell">Comparability: stable indicators across firms, time, and standards.</div>
+                    <div class="cell risk"><b>Narrow measurement</b>: what’s measurable crowds out what matters.</div>
+                    </div>
+
+                    <div class="row">
+                    <div class="cell zone">Narrative</div>
+                    <div class="cell">Strategic positioning: interpret performance, justify trade-offs, frame uncertainty.</div>
+                    <div class="cell risk"><b>Greenwashing</b>: asymmetric disclosure + cherry-picked stories.</div>
+                    </div>
+
+                    <div class="row">
+                    <div class="cell zone">Targets</div>
+                    <div class="cell">Forward commitment: define trajectory, milestones, and implied capital allocation.</div>
+                    <div class="cell risk"><b>Unrealistic optimism</b>: targets without credible pathways or governance “teeth”.</div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="footer">
+                <div class="box">
+                    <div class="q">Analytical move</div>
+                    Evaluate a report by asking: <b>Which zone is doing the heavy lifting?</b><br/>
+                    (Often: “assured metrics” carry credibility for “unassured narrative”.)
+                </div>
+                <div class="box">
+                    <div class="q">Discussion question</div>
+                    Which zone would a regulator care about most? Which zone does marketing care about most?
+                </div>
+                </div>
+            </div>
+
+            <aside class="notes">
+                This is the slide that makes the whole lecture “structural”. Students can later map Sage
+                features onto zones and see where assurance and governance are concentrated.
+            </aside>
+            </section>
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+            <section id="sr-measurement-problem">
+            <div class="wrap">
+                <header>
+                <h2>The Measurement Problem</h2>
+                <div class="sub">
+                    Financial reporting measures <b>what happened</b>. Sustainability reporting increasingly claims to measure <b>what might happen</b>.
+                </div>
+                </header>
+
+                <div class="grid">
+                <div class="card">
+                    <div class="k">Financial reporting (baseline)</div>
+                    <ul>
+                    <li><b>Past-oriented:</b> realised transactions and outcomes.</li>
+                    <li><b>Quantified:</b> accounting rules → stable measurement conventions.</li>
+                    <li><b>Audited:</b> ex-post verification is feasible (evidence exists).</li>
+                    <li><b>Decision logic:</b> performance → valuation, stewardship, contracting.</li>
+                    </ul>
+                    <div class="ladder">
+                    <div class="step"><span class="lbl">Evidence density</span><span>high</span></div>
+                    <div class="step"><span class="lbl">Counterfactual dependence</span><span>low</span></div>
+                    <div class="step"><span class="lbl">Model reliance</span><span>low</span></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="k">Sustainability reporting (frontier)</div>
+                    <ul>
+                    <li><b>Future risk:</b> climate/transition, litigation, supply chain, human capital.</li>
+                    <li><b>Scenario-based:</b> “what if” pathways — not forecasts.</li>
+                    <li><b>Estimation-heavy:</b> boundaries, scopes, factors, assumptions.</li>
+                    <li><b>Audit gap:</b> forward claims often become “assurance-lite”.</li>
+                    </ul>
+                    <div class="ladder">
+                    <div class="step"><span class="lbl">Proxy metrics</span><span class="weak">easy, incomplete</span></div>
+                    <div class="step"><span class="lbl">Forward-looking metrics</span><span class="weak">plans, still non-financial</span></div>
+                    <div class="step"><span class="lbl">Scenario analysis</span><span class="weak">modelled outcomes</span></div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="footer">
+                <span class="pill">Rule of thumb: the further forward you look, the weaker “measurement” becomes.</span>
+                <span>So credibility shifts from numbers → governance → assumptions → assurance scope.</span>
+                </div>
+            </div>
+
+            <aside class="notes">
+                Anchor: BoE Box A distinguishes proxies / forward-looking / scenario analysis and says scenarios are not forecasts.
+                Use that to legitimise why “measurement” is structurally hard, not a managerial failure.
+            </aside>
+            </section>
+
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="sr-horizon-problem">
+            <div class="wrap">
+                <header>
+                <h2>Reporting Horizon Problem</h2>
+                <div class="sub">
+                    A Net-Zero 2040 claim is made today — but <b>what is credible today</b>, and what is merely aspirational?
+                </div>
+                </header>
+
+                <div class="panel">
+                <div class="left">
+                    <div class="claim">A long-term target is cheap to state, expensive to govern.</div>
+                    <div class="qbox">
+                    <div class="q">Credibility questions (not “PR questions”)</div>
+                    <ul>
+                        <li><b>What is enforceable?</b> (board oversight, escalation routes, sanctions)</li>
+                        <li><b>What is measurable now?</b> (interim milestones, definitions, boundaries)</li>
+                        <li><b>What is funded?</b> (capex/opex signals, product roadmap, supplier programmes)</li>
+                        <li><b>What is assured?</b> (scope + limitations + materiality threshold)</li>
+                    </ul>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <div class="map">
+                    <div class="t">Time mismatch</div>
+                    Financial statements: annual → 3–5 year planning windows<br/>
+                    Sustainability risks: 10–30 years, fat tails, non-linearities<br/>
+                    <b>So:</b> “materiality” becomes a moving target.
+                    </div>
+
+                    <div class="ladder">
+                    <div class="step"><b>Short horizon:</b> high verifiability, low relevance for transition risk.</div>
+                    <div class="step"><b>Medium horizon:</b> partial measurability, contested assumptions.</div>
+                    <div class="step"><b>Long horizon:</b> high relevance, low enforceability without governance “teeth”.</div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="footer">
+                <span class="pill">Key idea: Horizons are a governance choice, not a technical footnote.</span>
+                <span>Next: does the report show real connectivity — or narrative glue?</span>
+                </div>
+            </div>
+
+            <aside class="notes">
+                Make them articulate: “What would have to be true for the 2040 claim to be credible in 2026?”
+                Then: what evidence would exist in a report that is *not* just rhetoric?
+            </aside>
+            </section>
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="sr-connectivity-chain">
+            <div class="wrap">
+                <header>
+                <h2>Connectivity: Real Integration or Narrative Glue?</h2>
+                <div class="sub">
+                    Connectivity is the “audit trail” from strategy to metrics. If the chain breaks, the report becomes persuasion without accountability.
+                </div>
+                </header>
+
+                <div class="panel">
+                <div class="chain">
+                    <div class="node"><b>Strategy</b><span class="hint">what we will do</span></div>
+                    <div class="node"><b>Materiality</b><span class="hint">what counts</span></div>
+                    <div class="node"><b>Risk</b><span class="hint">what could go wrong</span></div>
+                    <div class="node"><b>Governance</b><span class="hint">who owns it</span></div>
+                    <div class="node"><b>Incentives</b><span class="hint">what gets rewarded</span></div>
+                    <div class="node"><b>Targets</b><span class="hint">where we aim</span></div>
+                    <div class="node"><b>KPIs</b><span class="hint">what we measure</span></div>
+                </div>
+
+                <div class="breaks">
+                    <div class="t">Where does the chain typically break?</div>
+                    <div class="break"><b>Materiality → omission:</b> “immaterial” becomes a managerial discretion lever (topic exclusion).</div>
+                    <div class="break"><b>Risk → metrics:</b> risks described qualitatively; KPIs report what is easy to count.</div>
+                    <div class="break"><b>Governance → incentives:</b> committees exist, but pay and decision rights are weakly tied.</div>
+                    <div class="break"><b>Targets → assurance:</b> targets are ambitious; assurance is partial and backward-looking.</div>
+                    <div class="break"><b>KPIs → decision-use:</b> numbers do not map into capital allocation or product strategy.</div>
+                </div>
+                </div>
+
+                <div class="footer">
+                <span class="pill">Diagnostic: “Show me the connective tissue, not the slogans.”</span>
+                <span>Now: Sage as a compact regulatory-architecture case.</span>
+                </div>
+            </div>
+
+            <aside class="notes">
+                Students can later “score” a report by checking which links have evidence.
+                This sets up the Sage mini-case slides cleanly.
+            </aside>
+            </section>
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="sr-sage-architecture-v2">
+            <div class="wrap">
+                <header>
+                <h2>Sage: Regulatory Architecture in Four “Receipts”</h2>
+                <div class="sub">
+                    These four disclosures reveal the scaffolding:
+                    <b>materiality gates</b> → <b>time horizons</b> → <b>financial materiality</b> → <b>assurance scope</b>.
+                </div>
+                </header>
+
+                <div class="panel">
+
+                <!-- LEFT: RECEIPTS (actual wording) -->
+                <div class="left">
+                    <div class="box">
+                    <div class="t">Receipt 1 — Materiality as an inclusion gate</div>
+                    <div class="clip">
+                        <div class="q">“We have omitted all the disclosure requirements … as these were deemed immaterial in our DMA.”</div>
+                        <div class="src">
+                        Sage NFS 2025 · “About the Statement”
+                        </div>
+                    </div>
+                    <div class="hint">What this shows: compliance can be achieved through <b>exclusion</b> (DMA decides “what appears”).</div>
+                    </div>
+
+                    <div class="box">
+                    <div class="t">Receipt 2 — Time horizons are chosen (and justified)</div>
+                    <div class="clip">
+                        <div class="q">“Short-term 5 years; medium-term 5–15 years; long-term 15–30 years.”</div>
+                        <div class="src">
+                        Sage NFS 2025 · “Definitions and assumptions”
+                        </div>
+                    </div>
+                    <div class="hint">What this shows: horizons are a <b>governance choice</b> that shapes what can be “material today”.</div>
+                    </div>
+
+                    <div class="box">
+                    <div class="t">Receipt 3 — Climate: “not financially material”</div>
+                    <div class="clip">
+                        <div class="q">“We did not identify that climate is a financially material risk … in the short, medium or long term.”</div>
+                        <div class="src">
+                        Sage NFS 2025 · climate risk & opportunity assessment
+                        </div>
+                    </div>
+                    <div class="hint">What this shows: <b>financial materiality</b> can diverge from “common sense” salience.</div>
+                    </div>
+
+                    <div class="box">
+                    <div class="t">Receipt 4 — Assurance is explicitly selective</div>
+                    <div class="clip">
+                        <div class="q">“Provide limited assurance over selected sustainability disclosure …”</div>
+                        <div class="src">
+                        Sage NFS 2025 · Independent assurance report
+                        </div>
+                    </div>
+                    <div class="hint">What this shows: credibility is built via <b>assured fragments</b>, not the whole narrative.</div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: INTERPRETATION MAP -->
+                <div class="right">
+                    <div class="map">
+                    <div class="t">How to read this (method you can reuse on any firm)</div>
+
+                    <div class="line">
+                        <span class="tag">DMA</span>
+                        <div>
+                        <b>Standardisation vs discretion:</b> the firm decides what falls outside the reporting boundary.
+                        <div class="mini">Interpretation move: treat “immaterial” as a <i>decision</i>, not a fact.</div>
+                        </div>
+                    </div>
+
+                    <div class="line">
+                        <span class="tag">Horizon</span>
+                        <div>
+                        <b>Forward uncertainty:</b> chosen horizons determine which risks are “in scope” for present accountability.
+                        <div class="mini">Interpretation move: ask what becomes invisible when you lengthen/shorten horizons.</div>
+                        </div>
+                    </div>
+
+                    <div class="line">
+                        <span class="tag">FM</span>
+                        <div>
+                        <b>Financial materiality threshold:</b> “not financially material” depends on an implicit cutoff.
+                        <div class="mini">Interpretation move: ask “what threshold?” and “what evidence?”</div>
+                        </div>
+                    </div>
+
+                    <div class="line">
+                        <span class="tag">Assure</span>
+                        <div>
+                        <b>Accountability vs legitimacy:</b> assurance produces credibility islands.
+                        <div class="mini">Interpretation move: distinguish “assured KPIs” from “unaudited storyline”.</div>
+                        </div>
+                    </div>
+
+                    <div class="qbox">
+                        <b>One-minute class prompt:</b><br/>
+                        Which receipt is most consequential for decision-usefulness — omission, horizons, “not financially material”, or selective assurance?
+                    </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+
+            </section>
+
+<!-- #############################################################divider###################################################################### -->
+
+            <section id="sr-sage-critical-v3">
+            <div class="wrap">
+                <header>
+                <h2>Sage: Where the Reporting Tensions Become Visible</h2>
+                <div class="sub">
+                    We now move from <b>what is disclosed</b> to <b>what the architecture implies</b>.
+                </div>
+                </header>
+
+                <div class="panel">
+
+                <!-- LEFT: STRUCTURAL OBSERVATIONS -->
+                <div class="left">
+
+                    <div class="box">
+                    <div class="t">1. Omission is rule-consistent</div>
+                    <div class="clip">
+                        “Omitted … disclosure requirements … deemed immaterial in our DMA.”
+                    </div>
+                    <div class="insight">
+                        ESRS structure is followed — but topic inclusion remains discretionary.
+                    </div>
+                    </div>
+
+                    <div class="box">
+                    <div class="t">2. Climate: not financially material</div>
+                    <div class="clip">
+                        “Did not identify climate as a financially material risk … short, medium or long term.”
+                    </div>
+                    <div class="insight">
+                        Impact salience ≠ financial materiality.
+                    </div>
+                    </div>
+
+                    <div class="box">
+                    <div class="t">3. Assurance is selective</div>
+                    <div class="clip">
+                        “Limited assurance over selected sustainability disclosures.”
+                    </div>
+                    <div class="insight">
+                        Assurance strengthens parts of the report — not the whole narrative.
+                    </div>
+                    </div>
+
+                    <div class="box">
+                    <div class="t">4. Incentive weight</div>
+                    <div class="clip">
+                        ESG metrics: 5% + 5% in executive incentives.
+                    </div>
+                    <div class="insight">
+                        Sustainability is embedded — but magnitude matters.
+                    </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT: ANALYTICAL FRAME -->
+                <div class="right">
+
+                    <div class="analysis">
+                    <div class="at">Three Structural Questions</div>
+
+                    <div class="aline">
+                        <span class="tag">A</span>
+                        <div>
+                        <b>Threshold Question</b><br/>
+                        What scoring threshold converts a topic from “reportable” to “immaterial”?
+                        Who sets it? Who reviews it?
+                        </div>
+                    </div>
+
+                    <div class="aline">
+                        <span class="tag">B</span>
+                        <div>
+                        <b>Financial Lens Question</b><br/>
+                        What magnitude of cash flow effect is required before climate becomes
+                        “financially material”?
+                        </div>
+                    </div>
+
+                    <div class="aline">
+                        <span class="tag">C</span>
+                        <div>
+                        <b>Credibility Question</b><br/>
+                        Does selective assurance increase trust — or create the appearance of completeness?
+                        </div>
+                    </div>
+
+                    </div>
+
+                    <div class="exercise">
+                    <div class="et">In-Class Exercise</div>
+                    <div class="ep">
+                        You are a regulator redesigning ESRS.<br/><br/>
+                        <b>What single change would reduce discretion without making reporting infeasible?</b>
+                        <ul>
+                        <li>Mandatory quantitative DMA thresholds?</li>
+                        <li>Full-report assurance instead of selected KPIs?</li>
+                        <li>Mandatory disclosure of financial materiality cutoff?</li>
+                        </ul>
+                    </div>
+                    </div>
+
+                </div>
+
+                </div>
+
+            </div>
+            </section>
+
+<!-- #############################################################divider###################################################################### -->
+
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+
+<!-- #############################################################divider###################################################################### -->
+
+
+
+
+        </div>
+    </div>
+
+    <!-- Script for syntax highlighting plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.js"></script>
+
+    <script>
+        // Initialize Reveal.js
+        Reveal.initialize({
+            // Added autoAnimate and plugins
+            autoAnimate: true,
+            plugins: [ RevealHighlight ],
+
+            width: 1280,
+            height: 720,
+            margin: 0.04,
+            history: true,
+            progress: true,
+            center: true,
+            transition: 'convex', 
+            backgroundTransition: 'fade',
+
+            // Your custom keyboard navigation is preserved
+            keyboard: {
+                13: () => { Reveal.next(); }, // Enter
+                32: () => { Reveal.next(); }, // Space
+                37: () => { Reveal.prev(); }, // Left arrow
+                39: () => { Reveal.next(); }, // Right arrow
+                38: null, // Up arrow (disabled)
+                40: null  // Down arrow (disabled)
+            }
+        });
+
+        // Your custom Javascript for UI controls is preserved
+
+        Reveal.on('ready', event => {
+            const docEl = document.documentElement;
+            const revealContainer = document.querySelector('.reveal');
+
+            const menuButton = document.getElementById('menu-btn');
+            const fullscreenButton = document.getElementById('fullscreen-btn');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const menuCloseButton = document.getElementById('menu-close-btn');
+            const menuList = document.getElementById('menu-list');
+
+            let controlsVisibilityTimer;
+
+            function showControls() {
+                clearTimeout(controlsVisibilityTimer);
+                menuButton.classList.add('visible');
+                fullscreenButton.classList.add('visible');
+
+                controlsVisibilityTimer = setTimeout(() => {
+                    menuButton.classList.remove('visible');
+                    fullscreenButton.classList.remove('visible');
+                }, 3000);
+            }
+
+            function toggleFullscreen() {
+                const isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+                if (!isFullscreen) {
+                    const requestMethod = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+                    if (requestMethod) requestMethod.call(docEl);
+                } else {
+                    const exitMethod = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
+                    if (exitMethod) exitMethod.call(document);
+                }
+            }
+
+            function onFullscreenChange() {
+                const isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+                fullscreenButton.textContent = isFullscreen ? 'Exit' : 'Fullscreen';
+                showControls();
+            }
+            
+            function buildMenuV2() {
+                menuList.innerHTML = '';
+                Reveal.getSlides().forEach((slide, index) => {
+                    const indices = Reveal.getIndices(slide);
+                    const isVertical = slide.parentElement.tagName === 'SECTION';
+
+                    const titleElement = slide.querySelector('h1, h2, h3, h4');
+                    let titleText = `Slide ${indices.h + 1}`;
+                    if (titleElement) {
+                        titleText = titleElement.textContent;
+                    } else if (isVertical) {
+                        titleText = `Sub-slide ${indices.v}`;
+                    }
+                    
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `#/${indices.h}${indices.v > 0 ? '/' + indices.v : ''}`;
+                    
+                    if(isVertical) {
+                        link.innerHTML = `&nbsp;&nbsp;&nbsp;↳ ${titleText}`;
+                    } else {
+                        link.textContent = titleText;
+                    }
+                    
+                    link.addEventListener('click', () => {
+                        menuOverlay.classList.remove('active');
+                    });
+                    
+                    listItem.appendChild(link);
+                    menuList.appendChild(listItem);
+                });
+            }
+
+
+            revealContainer.addEventListener('mousemove', showControls);
+            fullscreenButton.addEventListener('click', toggleFullscreen);
+            document.addEventListener('fullscreenchange', onFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+            document.addEventListener('mozfullscreenchange', onFullscreenChange);
+            document.addEventListener('MSFullscreenChange', onFullscreenChange);
+            
+            menuButton.addEventListener('click', () => menuOverlay.classList.add('active'));
+            menuCloseButton.addEventListener('click', () => menuOverlay.classList.remove('active'));
+            menuOverlay.addEventListener('click', (e) => {
+                if (e.target === menuOverlay) menuOverlay.classList.remove('active');
+            });
+
+            // Initial setup
+            buildMenuV2();
+            onFullscreenChange();
+            showControls();
+        });
+    </script>
+</body>
+</html>
